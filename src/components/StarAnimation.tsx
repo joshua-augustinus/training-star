@@ -8,28 +8,62 @@ interface Props {
     isSelected: boolean
 }
 
+const WIDTH = 40;
+
 const StarAnimation = (props: Props) => {
-    const selectedOpacity = useRef(new Animated.Value(0)).current;
+    const shimmerOpacity = useRef(new Animated.Value(1)).current;
     const unselectedOpacity = useRef(new Animated.Value(1)).current;
+    const selectedScale = useRef(new Animated.Value(0)).current;
+    const shimmerScale = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         if (props.isSelected) {
+
             const animation1 = Animated.timing(unselectedOpacity, {
                 toValue: 0,
-                useNativeDriver: true
+                useNativeDriver: true,
+                duration: 0
             })
-            const animation2 = Animated.timing(selectedOpacity, {
-                toValue: 1,
-                useNativeDriver: true
+            const animation2 = Animated.timing(shimmerOpacity, {
+                toValue: 0.2,
+                useNativeDriver: true,
+                duration: 500
             })
 
-            Animated.parallel([animation1, animation2]).start();
+            const animation3 = Animated.timing(selectedScale, {
+                toValue: 1,
+                useNativeDriver: true,
+                duration: 500
+            })
+
+            const animation4 = Animated.timing(shimmerScale, {
+                toValue: 2,
+                useNativeDriver: true,
+                duration: 500
+            })
+
+            //Reset quickly
+            const reset1 = Animated.timing(shimmerOpacity, {
+                toValue: 1,
+                useNativeDriver: true,
+                duration: 100
+            })
+
+            const reset2 = Animated.timing(shimmerScale, {
+                toValue: 0,
+                useNativeDriver: true,
+                duration: 100
+            })
+
+            Animated.parallel([animation1, animation2, animation3, animation4]).start(() => {
+                Animated.parallel([reset1, reset2]).start();
+            });
         } else {
             const animation1 = Animated.timing(unselectedOpacity, {
                 toValue: 1,
                 useNativeDriver: true
             })
-            const animation2 = Animated.timing(selectedOpacity, {
+            const animation2 = Animated.timing(selectedScale, {
                 toValue: 0,
                 useNativeDriver: true
             })
@@ -43,17 +77,24 @@ const StarAnimation = (props: Props) => {
         <>
             <Animated.View
                 style={{
-                    width: 70, height: 70, opacity: unselectedOpacity
+                    width: WIDTH, height: WIDTH, opacity: unselectedOpacity
                 }}>
                 <StarUnselected />
             </Animated.View>
             <Animated.View
                 style={{
-                    opacity: selectedOpacity,
-                    width: 70, height: 70, transform: [{ translateY: -70 }]
+                    width: WIDTH, height: WIDTH, transform: [{ translateY: -WIDTH }, { scale: selectedScale }]
                 }}>
                 <StarSelected />
             </Animated.View>
+            <Animated.View
+                style={{
+                    opacity: shimmerOpacity,
+                    width: WIDTH, height: WIDTH, transform: [{ translateY: -WIDTH * 2 }, { scale: shimmerScale }]
+                }}>
+                <StarSelected />
+            </Animated.View>
+
 
         </>
 
