@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, TouchableOpacity, View, Image, StyleSheet, Pressable } from 'react-native';
 import { SafeAreaView, StackActions } from 'react-navigation';
 import { DrawerActions, NavigationDrawerProp } from 'react-navigation-drawer';
 import { StarSelected } from '@src/components/StarSelected';
@@ -15,6 +15,7 @@ type Props = {
 }
 
 const MasterScreen = (props: Props) => {
+    const [isSelected, setIsSelected] = useState(false);
 
     useEffect(() => {
 
@@ -27,14 +28,7 @@ const MasterScreen = (props: Props) => {
     }
 
     const onButtonPress = () => {
-        const pushAction = StackActions.push({
-            routeName: 'Stack1',
-            params: {
-                myUserId: 9,
-            },
-        });
-
-        props.navigation.dispatch(pushAction);
+        setIsSelected(!isSelected);
     }
 
 
@@ -51,9 +45,12 @@ const MasterScreen = (props: Props) => {
                 flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue',
             }}>
 
-                <StarAnimation>
-                    <StarSelected />
-                </StarAnimation>
+                <Pressable onPress={onButtonPress}>
+                    <StarAnimation isSelected={isSelected}>
+
+                    </StarAnimation>
+                </Pressable>
+
             </View>
         </SafeAreaView>
 
