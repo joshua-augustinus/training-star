@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
-import { Button, Text, TextInput, TouchableOpacity, View, BackHandler } from 'react-native';
+import { Text, TouchableOpacity, View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView, StackActions } from 'react-navigation';
 import { DrawerActions, NavigationDrawerProp } from 'react-navigation-drawer';
-import Icon from 'react-native-vector-icons/Entypo';
+import { StarSelected } from '@src/components/StarSelected';
+import { StarAnimation } from '@src/components/StarAnimation';
+
+const starImage = require('../assets/star-shadows.png');
 
 /**
  * https://reactnavigation.org/docs/4.x/typescript
@@ -44,11 +47,13 @@ const MasterScreen = (props: Props) => {
                     <Text>Menu</Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name="controller-play" size={24} />
-                <Text>{props.navigation.state.routeName}</Text>
-                <TextInput placeholder="Enter text here..."></TextInput>
-                <Button title="Press me" onPress={() => onButtonPress()}></Button>
+            <View style={{
+                flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'blue',
+            }}>
+
+                <StarAnimation>
+                    <StarSelected />
+                </StarAnimation>
             </View>
         </SafeAreaView>
 
@@ -59,3 +64,10 @@ const MasterScreen = (props: Props) => {
 MasterScreen.navigationOptions = {}
 
 export { MasterScreen }
+
+const styles = StyleSheet.create({
+    star: {
+        resizeMode: 'contain',
+        backgroundColor: 'transparent'
+    }
+})
